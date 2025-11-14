@@ -2,11 +2,12 @@
 
 ## 🎯 Project Overview
 
-A **professional hybrid test automation framework** for https://automationexercise.com demonstrating real-world QA engineering practices combining API and UI testing.
+A **professional hybrid test automation framework** for <https://automationexercise.com> demonstrating real-world QA engineering practices combining API and UI testing.
 
 ## ✨ Key Features
 
 ### 🔄 Hybrid Testing Pattern
+
 - **API for heavy lifting** - User creation/deletion (10x faster than UI)
 - **UI for user validation** - Real user journeys and behavior verification
 - **Best of both worlds** - Speed + Reliability + Real-world scenarios
@@ -19,6 +20,7 @@ API Test (Setup)  →  UI Test (Validation)  →  API Test (Cleanup)
 ```
 
 **Example Flow:**
+
 1. **API**: Create test user account (500ms)
 2. **UI**: Login and verify logged-in state (3s)
 3. **API**: Delete test user account (300ms)
@@ -30,17 +32,20 @@ API Test (Setup)  →  UI Test (Validation)  →  API Test (Cleanup)
 ### ✅ Passing Tests (10/10 smoke tests)
 
 **API Tests:**
+
 - Get all products list
 - Get all brands list  
 - Create/verify/delete user account via API
 - Invalid login error handling
 
 **Hybrid E2E Tests:**
+
 - Login with API-created user
 - Access protected products page when logged in
 - Verify products count after authentication
 
 **UI Tests:**
+
 - Homepage loads with correct title
 - Navigation links displayed
 - Featured items section visible
@@ -171,18 +176,21 @@ Running 10 tests using 5 workers
 ## 💡 Best Practices Implemented
 
 ### Code Quality
+
 - ✅ Zero `any` types - Strict TypeScript
 - ✅ ESLint passing with 0 errors
 - ✅ Web-first assertions (auto-waiting)
 - ✅ Role-based locators (accessibility)
 
 ### Test Design
+
 - ✅ Complete test isolation
 - ✅ Unique test data per run (Faker)
 - ✅ Test.step() for readability
 - ✅ Proper tags (@smoke, @regression)
 
 ### Architecture
+
 - ✅ Page Object flow pattern
 - ✅ API for setup/teardown
 - ✅ UI for actual user journeys
@@ -202,6 +210,7 @@ Running 10 tests using 5 workers
 **Problem**: Testing user login and authenticated page access
 
 **Bad Approach** (UI only):
+
 ```
 1. UI: Navigate to signup (2s)
 2. UI: Fill registration form (3s)
@@ -213,6 +222,7 @@ Total: ~13 seconds + flaky form interactions
 ```
 
 **Good Approach** (Hybrid):
+
 ```
 1. API: Create user account (500ms)
 2. UI: Login with credentials (3s)

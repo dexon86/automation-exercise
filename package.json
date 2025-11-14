@@ -11,9 +11,15 @@
     "show-report": "playwright show-report",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "lint:md:fix": "markdownlint \"**/*.md\" --ignore node_modules --fix",
     "codegen": "playwright codegen"
   },
-  "keywords": ["playwright", "automation", "testing"],
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -25,6 +31,8 @@
     "dotenv": "^16.3.1",
     "eslint": "^8.54.0",
     "eslint-plugin-playwright": "^0.20.0",
+    "markdownlint": "^0.39.0",
+    "markdownlint-cli": "^0.45.0",
     "typescript": "^5.3.2"
   }
 }

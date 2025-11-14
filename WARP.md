@@ -9,6 +9,7 @@ Project: Playwright UI Testing Framework (TypeScript) - A comprehensive UI testi
 When using Playwright MCP tools for interactive browser testing:
 
 ### Test Generation Workflow
+
 1. Use MCP browser tools (browser_navigate, browser_snapshot, browser_click, browser_type, etc.) to explore and interact with the application
 2. Document each interaction step by step
 3. After completing all manual exploration, generate a complete Playwright TypeScript test using @playwright/test
@@ -17,6 +18,7 @@ When using Playwright MCP tools for interactive browser testing:
 6. Run linter with `npm run lint` to ensure code quality
 
 ### MCP Browser Testing Best Practices
+
 - Always use `browser_snapshot` to inspect page structure before attempting interactions
 - Use role-based selectors (getByRole, getByLabel, getByText) over CSS/XPath when writing tests
 - Prefer `browser_snapshot` over `browser_take_screenshot` for getting element references
@@ -27,6 +29,7 @@ When using Playwright MCP tools for interactive browser testing:
 - Use `browser_evaluate` for complex JavaScript operations that can't be done with standard MCP tools
 
 ### Test Philosophy
+
 - Test user-visible behavior that users will interact with
 - Avoid relying on implementation details
 - Each test must be completely isolated from other tests
@@ -35,6 +38,7 @@ When using Playwright MCP tools for interactive browser testing:
 - Apply tags (@smoke, @regression) for selective test runs
 
 ### Page Object Model Guidelines
+
 - Create page objects in e2e/pages/ directory
 - Organize by feature (e.g., e2e/pages/auth/ for authentication pages)
 - Use private getter methods for locators
@@ -45,9 +49,11 @@ When using Playwright MCP tools for interactive browser testing:
 - Include verification helper methods for common assertions
 
 #### Page Object Flow Pattern (IMPORTANT)
+
 - **Action methods that navigate should return the next page object**
 - This enforces proper user flow and prevents navigation shortcuts
 - Example:
+
   ```typescript
   // LoginPage.ts
   async submit(): Promise<IoTDashboardPage> {
@@ -61,6 +67,7 @@ When using Playwright MCP tools for interactive browser testing:
   const dashboardPage = await loginPage.submit();
   // dashboardPage is now ready to use
   ```
+
 - Benefits:
   - Makes test flow readable and self-documenting
   - Prevents direct `goto()` calls that skip user flows
@@ -72,6 +79,7 @@ When using Playwright MCP tools for interactive browser testing:
   - Test setup when you need to start at a specific page
 
 ### Locator Best Practices
+
 - Priority order: getByRole > getByLabel > getByPlaceholder > getByText > getByTestId > CSS/XPath
 - Use chaining and filtering to narrow down search: `page.getByRole('listitem').filter({ hasText: 'Product 2' })`
 - Avoid XPath when possible
@@ -79,6 +87,7 @@ When using Playwright MCP tools for interactive browser testing:
 - For custom UI components (Nebular, Material, etc.), scope with parent selector first
 
 ### Assertions and Waits
+
 - Always use web-first assertions: `await expect(locator).toBeVisible()`
 - Never use manual assertions: avoid `expect(await locator.isVisible()).toBe(true)`
 - Playwright auto-waits for: attached, visible, stable, enabled, editable
@@ -86,13 +95,16 @@ When using Playwright MCP tools for interactive browser testing:
 - Add explicit waits with `waitFor({ state: 'visible', timeout: 10000 })` for dynamic elements
 
 ### Test Data
+
 - Use @faker-js/faker for generating random test data
 - Import from helpers: `import { faker } from '@faker-js/faker'`
 - Generate unique emails, names, passwords to avoid collisions
 - Example: `faker.internet.email()`, `faker.person.fullName()`, `faker.internet.password({ length: 10 })`
 
 ### Data-Driven Testing
+
 When the same test logic needs to run with different inputs, use data-driven approach:
+
 - **Create test data arrays** outside test blocks (at module level)
 - **Use loops** to generate multiple tests from the same logic
 - **Apply test design techniques**:
@@ -100,6 +112,7 @@ When the same test logic needs to run with different inputs, use data-driven app
   - **Boundary Value Analysis**: Test edge cases and limits
   - **Matrix Testing**: Test combinations of inputs
 - **IMPORTANT**: Never include dynamic data in test titles (Playwright requirement)
+
   ```typescript
   // ✅ GOOD - Static title, dynamic data in test
   const testData = [
@@ -121,11 +134,14 @@ When the same test logic needs to run with different inputs, use data-driven app
     });
   }
   ```
+
 - See `e2e/forms/data-driven-forms.spec.ts` for complete example
 - Benefits: Reduces duplication, easy to add new cases, demonstrates professional test design
 
 ### API Testing Layer
+
 This project includes API testing capabilities alongside UI tests:
+
 - **API Helper**: `e2e/api/api-helper.ts` - Reusable class for HTTP requests
 - **Test organization**: API tests in `e2e/api/` directory
 - **Available methods**:
@@ -138,6 +154,7 @@ This project includes API testing capabilities alongside UI tests:
   - `getResponseBody(response)` - Extract JSON response
   - `verifyResponseData(actual, expected)` - Data validation
 - **Usage example**:
+
   ```typescript
   test('should create a new post', async ({ request }) => {
     const apiHelper = new ApiHelper(request);
@@ -151,6 +168,7 @@ This project includes API testing capabilities alongside UI tests:
     expect(data.id).toBeDefined();
   });
   ```
+
 - **Best practices**:
   - Use API tests for backend validation (faster than UI)
   - Test CRUD operations, schema validation, error handling
@@ -160,11 +178,13 @@ This project includes API testing capabilities alongside UI tests:
 - See `e2e/api/api-tests.spec.ts` for comprehensive examples
 
 ### TypeScript Best Practices
+
 - **Never use `any` type** - use `unknown` or specific types
 - **Type all function parameters and return values**
 - **Use APIResponse type** from @playwright/test for API responses
 - **Use generics** where appropriate for reusable code
 - Example:
+
   ```typescript
   // ❌ BAD
   async post(url: string, body: any) { }
@@ -173,77 +193,104 @@ This project includes API testing capabilities alongside UI tests:
   async post(url: string, body: unknown, headers?: Record<string, string>) { }
   async verifyStatusCode(response: APIResponse, expectedStatus: number) { }
   ```
+
 - Run `npm run lint` to catch type issues early
 - ESLint enforces proper typing and awaited Playwright calls
 
 Commands
+
 - Setup
   - Node 18+ (see README)
   - Install deps
-    ```sh path=null start=null
+
+    ```sh
     npm install
     ```
+
   - Install Playwright browsers
-    ```sh path=null start=null
+
+    ```sh
     npx playwright install
     ```
+
 - Environment variables:
-    - Copy `.env.example` to `.env` and customize values
-    - BASE_URL, LOGIN_USER, LOGIN_PASS are loaded via dotenv
-    - Never commit `.env` file (in .gitignore)
+  - Copy `.env.example` to `.env` and customize values
+  - BASE_URL, LOGIN_USER, LOGIN_PASS are loaded via dotenv
+  - Never commit `.env` file (in .gitignore)
 
 - Run tests
   - All tests (all browsers defined in projects)
-    ```sh path=null start=null
+
+    ```sh
     npm test
     ```
+
   - UI mode
-    ```sh path=null start=null
+
+    ```sh
     npm run test:ui
     ```
+
   - Tagged suites
-    ```sh path=null start=null
+
+    ```sh
     npm run test:smoke
     npm run test:regression
     ```
+
   - Single file / directory
-    ```sh path=null start=null
+
+    ```sh
     npx playwright test e2e/homepage.spec.ts
     npx playwright test e2e/authentication/register.spec.ts
     npx playwright test e2e/authentication
     ```
+
   - By test title (grep)
-    ```sh path=null start=null
+
+    ```sh
     npx playwright test -g "loads successfully and has a title"
     ```
+
   - Choose browser project or headed mode
-    ```sh path=null start=null
+
+    ```sh
     npx playwright test --project=chromium
     npx playwright test --project=chromium --headed
     ```
+
   - API tests only (no app needed - uses public API)
-    ```sh path=null start=null
+
+    ```sh
     npx playwright test e2e/api
     ```
+
   - Data-driven tests example
-    ```sh path=null start=null
+
+    ```sh
     npx playwright test e2e/forms/data-driven-forms.spec.ts
     ```
 
 - Lint
-  ```sh path=null start=null
+
+  ```sh
   npm run lint
   npm run lint:fix
+  npm run lint:md
+  npm run lint:md:fix
   ```
+
   Notes: ESLint enforces awaiting Playwright actions/assertions (playwright/missing-playwright-await) and disallows floating promises (@typescript-eslint/no-floating-promises).
 
 - Reports and tooling
-  ```sh path=null start=null
+
+  ```sh
   npm run show-report   # open last HTML report
   npm run codegen       # launch Playwright codegen
   ```
 
 Architecture and configuration
+
 - Test directory: e2e/
   - Specs grouped by feature (e.g., e2e/authentication, e2e/homepage.spec.ts)
   - Tags used for suite selection: @smoke, @regression
@@ -266,7 +313,7 @@ Architecture and configuration
   - reporter: list + html
   - globalSetup: ./auth.setup.ts
   - use:
-    - baseURL: from process.env.BASE_URL (dotenv) with fallback to https://playwright.dev
+    - baseURL: from process.env.BASE_URL (dotenv) with fallback to <https://playwright.dev>
     - storageState: .auth/user.json
     - artifacts: trace on-first-retry, screenshots only-on-failure, video retain-on-failure
   - projects: chromium, firefox, webkit (Desktop profiles)
@@ -285,6 +332,7 @@ Architecture and configuration
   - Separate artifact upload on failure for debugging
 
 Operational notes for Warp
+
 - Environment
   - Copy `.env.example` to `.env` and customize
   - .env is read automatically via dotenv/config imported in playwright.config.ts
@@ -300,15 +348,76 @@ Operational notes for Warp
 - Storage state
   - If test flows rely on pre-auth state, ensure .auth/user.json exists (global setup creates/updates it each run)
 
+## Markdown Style Guide
+
+Follow these rules for all Markdown files in this repo. A markdownlint
+config is provided (.markdownlint.jsonc); run the commands below to check
+and fix issues.
+
+### Headings
+
+- Use ATX style: `# Heading`
+- Increase by one level at a time (no jumps)
+- No duplicate sibling headings
+- Exactly one H1 at the top of the file
+- No punctuation at end of headings
+- Surround headings with a single blank line
+
+### Text
+
+- Max line length: 80 characters
+- Emphasis: *italic*, **bold** (no spaces inside markers)
+- Single blank lines between sections
+- End files with a single newline
+- No trailing spaces (two allowed for hard line breaks)
+- Use spaces for indentation (no tabs)
+
+### Lists
+
+- Unordered lists use `-`
+- Ordered lists use sequential numbers (1., 2., 3.)
+- Indentation: 2 spaces for unordered, 3 for ordered
+- One space after list markers
+- Surround lists with blank lines
+
+### Code
+
+- Use fenced code blocks with a language, e.g., ` ```ts `
+- For inline code, use backticks: `code`
+- Don’t prefix commands with `$` (unless showing output too)
+- Surround code blocks with blank lines
+
+### Links and Images
+
+- Links: `[text](url)`; Images: `![alt text](image.png)`
+- No empty link text; no spaces inside brackets
+- Use proper links or wrap bare URLs in `<...>`
+- Ensure link fragments match real headings
+
+### Other
+
+- Blockquotes: `>` followed by a space
+- Tables: consistent pipes and equal column counts
+- Horizontal rules: `---` on its own line
+- Avoid inline HTML when possible
+- Maintain correct capitalization for product names
+
+### Linting Markdown
+
+- Check: `npm run lint:md`
+- Auto-fix: `npm run lint:md:fix`
+
 ## Advanced Patterns & Best Practices
 
 ### When to Use Each Testing Approach
+
 - **UI Tests**: Critical user journeys, visual validation, cross-browser compatibility
 - **API Tests**: Backend validation, data integrity, faster feedback, test data setup
 - **Data-Driven Tests**: Same logic with multiple inputs, test design technique demonstration
 - **Combined approach**: Use API for setup/teardown, UI for user workflows
 
 ### Test Independence
+
 - Each test must be completely independent
 - No shared state between tests
 - Tests can run in any order or in parallel
@@ -316,7 +425,9 @@ Operational notes for Warp
 - Don't rely on previous tests' side effects
 
 ### Code Quality Checklist
+
 Before committing new tests:
+
 1. ✅ Run `npm run lint` - must pass with 0 errors
 2. ✅ Run tests locally - must pass
 3. ✅ Use proper TypeScript types (no `any`)
@@ -327,6 +438,7 @@ Before committing new tests:
 8. ✅ Use role-based selectors when possible
 
 ### Documentation Files
+
 - **WARP.md** (this file): Agent guidance and best practices
 - **IMPROVEMENTS_SUMMARY.md**: Recent improvements and metrics
 - **INTERVIEW_PREP_GUIDE.md**: Interview preparation with Q&A
