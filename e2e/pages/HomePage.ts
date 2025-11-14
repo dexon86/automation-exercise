@@ -24,6 +24,18 @@ export class HomePage {
     return this.page.getByRole('heading', { name: /Features Items/i });
   }
 
+  private get loggedInUserLink(): Locator {
+    return this.page.locator('a:has-text("Logged in as")');
+  }
+
+  private get logoutLink(): Locator {
+    return this.page.getByRole('link', { name: 'Logout' });
+  }
+
+  private get deleteAccountLink(): Locator {
+    return this.page.getByRole('link', { name: 'Delete Account' });
+  }
+
   // Actions
   async goto(): Promise<void> {
     await this.page.goto('/');
@@ -54,5 +66,15 @@ export class HomePage {
 
   async verifyFeaturedItemsVisible(): Promise<void> {
     await expect(this.featuresItemsHeading).toBeVisible();
+  }
+
+  async verifyUserLoggedIn(username: string): Promise<void> {
+    await expect(this.loggedInUserLink).toContainText(username);
+    await expect(this.logoutLink).toBeVisible();
+    await expect(this.deleteAccountLink).toBeVisible();
+  }
+
+  async isUserLoggedIn(): Promise<boolean> {
+    return await this.logoutLink.isVisible();
   }
 }
