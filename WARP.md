@@ -2,7 +2,10 @@
 
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
-Project: Playwright UI Testing Framework (TypeScript) - A comprehensive UI testing framework targeting a web app, featuring Page Object Model with user flow enforcement, data-driven testing, API testing layer, multi-browser support, retries, storage state, and HTML reports.
+Project: Playwright UI Testing Framework (TypeScript) - A comprehensive UI
+testing framework targeting a web app, featuring Page Object Model with user
+flow enforcement, data-driven testing, API testing layer, multi-browser
+support, retries, storage state, and HTML reports.
 
 ## MCP (Model Context Protocol) Agent Rules
 
@@ -10,9 +13,12 @@ When using Playwright MCP tools for interactive browser testing:
 
 ### Test Generation Workflow
 
-1. Use MCP browser tools (browser_navigate, browser_snapshot, browser_click, browser_type, etc.) to explore and interact with the application
+1. Use MCP browser tools (browser_navigate, browser_snapshot,
+   browser_click, browser_type, etc.) to explore and interact with the
+   application
 2. Document each interaction step by step
-3. After completing all manual exploration, generate a complete Playwright TypeScript test using @playwright/test
+3. After completing all manual exploration, generate a complete Playwright
+   TypeScript test using @playwright/test
 4. Save the generated test file in the e2e/ directory (organized by feature)
 5. Execute the test file using `npx playwright test` and iterate until it passes
 6. Run linter with `npm run lint` to ensure code quality
@@ -20,13 +26,16 @@ When using Playwright MCP tools for interactive browser testing:
 ### MCP Browser Testing Best Practices
 
 - Always use `browser_snapshot` to inspect page structure before attempting interactions
-- Use role-based selectors (getByRole, getByLabel, getByText) over CSS/XPath when writing tests
+- Use role-based selectors (getByRole, getByLabel, getByText) over CSS/XPath
+  when writing tests
 - Prefer `browser_snapshot` over `browser_take_screenshot` for getting element references
-- When clicking elements, always provide both `element` (human-readable description) and `ref` (exact element reference from snapshot)
+- When clicking elements, always provide both `element` (human-readable
+  description) and `ref` (exact element reference from snapshot)
 - For form interactions, use `browser_fill_form` when filling multiple fields
 - Use `browser_wait_for` when waiting for dynamic content to appear/disappear
 - Handle dialogs with `browser_handle_dialog` when they appear
-- Use `browser_evaluate` for complex JavaScript operations that can't be done with standard MCP tools
+- Use `browser_evaluate` for complex JavaScript operations that can't be done
+  with standard MCP tools
 
 ### Test Philosophy
 
@@ -44,8 +53,10 @@ When using Playwright MCP tools for interactive browser testing:
 - Use private getter methods for locators
 - Expose intentful action methods (not raw clicks)
 - Use role-based locators (getByRole, getByLabel, getByText)
-- Add `{ force: true }` to checkbox/radio interactions when custom UI intercepts clicks
-- Scope locators properly (e.g., `page.locator('nb-auth-block').getByRole('link', { name: 'Register' })`)
+- Add `{ force: true }` to checkbox/radio interactions when custom UI
+  intercepts clicks
+- Scope locators properly (e.g.,
+  `page.locator('nb-auth-block').getByRole('link', { name: 'Register' })`)
 - Include verification helper methods for common assertions
 
 #### Page Object Flow Pattern (IMPORTANT)
@@ -80,11 +91,14 @@ When using Playwright MCP tools for interactive browser testing:
 
 ### Locator Best Practices
 
-- Priority order: getByRole > getByLabel > getByPlaceholder > getByText > getByTestId > CSS/XPath
-- Use chaining and filtering to narrow down search: `page.getByRole('listitem').filter({ hasText: 'Product 2' })`
+- Priority order: getByRole > getByLabel > getByPlaceholder > getByText >
+  getByTestId > CSS/XPath
+- Use chaining and filtering to narrow down search:
+  `page.getByRole('listitem').filter({ hasText: 'Product 2' })`
 - Avoid XPath when possible
 - Ensure uniqueness by scoping to parent containers
-- For custom UI components (Nebular, Material, etc.), scope with parent selector first
+- For custom UI components (Nebular, Material, etc.), scope with parent
+  selector first
 
 ### Assertions and Waits
 
@@ -92,14 +106,16 @@ When using Playwright MCP tools for interactive browser testing:
 - Never use manual assertions: avoid `expect(await locator.isVisible()).toBe(true)`
 - Playwright auto-waits for: attached, visible, stable, enabled, editable
 - Use `{ force: true }` only when elements are intercepted by custom overlays
-- Add explicit waits with `waitFor({ state: 'visible', timeout: 10000 })` for dynamic elements
+- Add explicit waits with `waitFor({ state: 'visible', timeout: 10000 })`
+  for dynamic elements
 
 ### Test Data
 
 - Use @faker-js/faker for generating random test data
 - Import from helpers: `import { faker } from '@faker-js/faker'`
 - Generate unique emails, names, passwords to avoid collisions
-- Example: `faker.internet.email()`, `faker.person.fullName()`, `faker.internet.password({ length: 10 })`
+- Example: `faker.internet.email()`, `faker.person.fullName()`,
+  `faker.internet.password({ length: 10 })`
 
 ### Data-Driven Testing
 
@@ -136,7 +152,8 @@ When the same test logic needs to run with different inputs, use data-driven app
   ```
 
 - See `e2e/forms/data-driven-forms.spec.ts` for complete example
-- Benefits: Reduces duplication, easy to add new cases, demonstrates professional test design
+- Benefits: Reduces duplication, easy to add new cases, demonstrates
+  professional test design
 
 ### API Testing Layer
 
@@ -280,7 +297,9 @@ Commands
   npm run lint:md:fix
   ```
 
-  Notes: ESLint enforces awaiting Playwright actions/assertions (playwright/missing-playwright-await) and disallows floating promises (@typescript-eslint/no-floating-promises).
+Notes: ESLint enforces awaiting Playwright actions/assertions
+(playwright/missing-playwright-await) and disallows floating promises
+(@typescript-eslint/no-floating-promises).
 
 - Reports and tooling
 
@@ -306,7 +325,8 @@ Architecture and configuration
   - e2e/forms/data-driven-forms.spec.ts: Data-driven testing with test design techniques
 - Global setup: auth.setup.ts
   - Runs before tests (configured as globalSetup)
-  - Seeds a benign cookie and persists storage state at .auth/user.json for reuse across tests
+- Seeds a benign cookie and persists storage state at .auth/user.json for
+  reuse across tests
 - Playwright config: playwright.config.ts
   - testDir: ./e2e
   - fullyParallel: true, retries: 2
@@ -346,7 +366,8 @@ Operational notes for Warp
   - Open HTML report with `npm run show-report`
   - Check linting with `npm run lint` before committing
 - Storage state
-  - If test flows rely on pre-auth state, ensure .auth/user.json exists (global setup creates/updates it each run)
+- If test flows rely on pre-auth state, ensure .auth/user.json exists
+  (global setup creates/updates it each run)
 
 ## Markdown Style Guide
 
